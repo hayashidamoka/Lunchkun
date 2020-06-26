@@ -25,6 +25,7 @@ public interface Hotpepperapi {
             @Query("lng") String lng,
             @Query("range") String range,
             @Query("lunch") String lunch,
+            @Query("count") String count,
             @Query("format") String format
 //            @Query("name") String name,
 //            @Query("genre") String genre,

@@ -1,5 +1,7 @@
 package com.example.lunch_app;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -31,9 +33,7 @@ import static com.example.lunch_app.MainActivity.lng;
 
 public class ResultActivity extends AppCompatActivity {
 
-    public static final String TAG = "RetrofitActivity";
     public static final String API_URL = "http://webservice.recruit.co.jp";
-    private TextView result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,6 @@ public class ResultActivity extends AppCompatActivity {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-
                 return response;
             }
         });
@@ -86,22 +85,28 @@ public class ResultActivity extends AppCompatActivity {
                 .client(client)
                 .build();
 
-//        Hotpepperapi service = retrofit.create(Hotpepperapi.class);
-//       Call<Gourmet> call = service.webservice("ae27b52bed304677","魚",lat,lng,"json");
-//        call.enqueue(new Callback<Gourmet>() {
-//            @Override
-//            public void onResponse(Call<Gourmet> call, Response<Gourmet> response) {
-//                Log.d("ろぐ",response.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Gourmet> call, Throwable t) {
-//                Log.d("ろぐ",t.toString());
-//
-//            }
-//        });
+        Hotpepperapi service = retrofit.create(Hotpepperapi.class);
+        SharedPreferences pref = getSharedPreferences("緯度経度", MODE_PRIVATE);
+        lat = pref.getString("lat", "");
+        lng = pref.getString("lng", "");
+        Call<Gourmet> call = service.webservice("ae27b52bed304677", lat, lng, "3", "1", "100", "json");
+        call.enqueue(new Callback<Gourmet>() {
+            @Override
+            public void onResponse(Call<Gourmet> call, Response<Gourmet> response) {
+                Log.d("ろぐ", response.toString());
 
+            }
+
+            @Override
+            public void onFailure(Call<Gourmet> call, Throwable t) {
+                Log.d("ろぐ", t.toString());
+//                Intent intent = new Intent();
+//                intent.setClass(MainActivity.this, ErrorActivity.class);
+//                startActivity(intent);
+            }
+        });
     }
 }
+
 
 

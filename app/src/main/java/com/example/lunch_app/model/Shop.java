@@ -6,7 +6,6 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Shop {
-    public Genre genre;
     public String lat;
     public String lng;
     public String lunch;
@@ -15,6 +14,7 @@ public class Shop {
     public Urls urls;
     @SerializedName("catch")
     public String catchCopy;
+    //public Genre genre;
     //public String access;
     //public String free_food;
     // public String private_room;
