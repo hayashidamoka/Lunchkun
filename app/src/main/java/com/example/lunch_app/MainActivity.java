@@ -31,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.example.lunch_app.model.Results;
 import com.example.lunch_app.model.Shop;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -173,13 +174,17 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("ろぐ", response.toString());
                 Random random = new Random();
                 int sum = random.nextInt();
-                int shop_count = (response.body().results.shop()).size();
+
+                Gourmet shop_count = response.body();
+                Results results = shop_count.getResults();
+                List shop = results.getShop();
+                shop.size();
 
 //                Random random = new Random();
 //                int num = rand.nextInt(10) + 100;
 //                System.out.println(num);
             }
-%
+
             @Override
             public void onFailure(Call<Gourmet> call, Throwable t) {
                 Log.d("ろぐ", t.toString());
