@@ -1,22 +1,21 @@
 package com.example.lunch_app;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.Random;
-import java.util.logging.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.lunch_app.model.Gourmet;
 import com.example.lunch_app.model.Shop;
 
@@ -98,9 +97,30 @@ public class ResultActivity extends AppCompatActivity {
                 Log.d("ろぐ", response.toString());
                 int shop_count = response.body().results.shop.size();
                 Random random = new Random();
-                int todayShopnum = random.nextInt(shop_count);
-                Object todayShop = response.body().results.shop.get(todayShopnum);
-            }
+                int todayShopnum = random.nextInt(shop_count - 1);
+                Shop todayShop = response.body().results.shop.get(todayShopnum);
+
+                String todayShopName = todayShop.name;
+                ImageView shop_photo = findViewById(R.id.shop_photo);
+                String todayShopPhotoUrl = todayShop.photo.pc.l;
+                Glide.with(ResultActivity.this).load(todayShopPhotoUrl).apply(new RequestOptions().override(700, 1000)).into(shop_photo);
+
+                String todayShopCatchCopy = todayShop.catchCopy;
+                String todayUrl = todayShop.urls.pc;
+
+                TextView shop_name = findViewById(R.id.shop_name);
+
+                TextView shop_catch_copy = findViewById(R.id.shop_catch_copy);
+
+                shop_name.setText(todayShopName);
+
+
+                shop_catch_copy.setText(todayShopCatchCopy);
+
+
+
+                Log.d("ろぐ", todayShop.toString());
+        }
 
             @Override
             public void onFailure(Call<Gourmet> call, Throwable t) {

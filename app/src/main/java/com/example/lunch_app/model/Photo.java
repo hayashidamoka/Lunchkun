@@ -4,5 +4,5 @@ import org.parceler.Parcel;
 
 @Parcel
 public class Photo {
-    public Mobile mobile;
+    public Pc pc;
 }
