@@ -12,11 +12,13 @@ import android.widget.Toolbar;
 
 import java.io.IOException;
 import java.security.Key;
+import java.util.Random;
 import java.util.logging.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.lunch_app.model.Gourmet;
+import com.example.lunch_app.model.Shop;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -94,7 +96,10 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Gourmet> call, Response<Gourmet> response) {
                 Log.d("ろぐ", response.toString());
-
+                int shop_count = response.body().results.shop.size();
+                Random random = new Random();
+                int todayShopnum = random.nextInt(shop_count);
+                Object todayShop = response.body().results.shop.get(todayShopnum);
             }
 
             @Override
