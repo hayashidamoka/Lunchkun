@@ -22,14 +22,19 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.lunch_app.model.Results;
@@ -61,14 +66,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RelativeLayout rl = findViewById(R.id.mainActivity);
+        checkLocationPermission();
+
 
 
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, ResultActivity.class);
-                startActivity(intent);
+                startRotation();
+
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent();
+                        intent.setClass(MainActivity.this, ResultActivity.class);
+                        startActivity(intent);
+                    }
+                }, 2000);
             }
 
         });
@@ -127,6 +141,27 @@ public class MainActivity extends AppCompatActivity {
         } else {
             //ごめんね画面
         }
+    }
+
+    private void startRotation() {
+
+        ImageView lunchkun = findViewById(R.id.lunchkun_top);
+
+        // RotateAnimation(float fromDegrees, float toDegrees, int pivotXType, float pivotXValue, int pivotYType,float pivotYValue)
+        RotateAnimation rotate = new RotateAnimation(0.0f, 360.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+
+        // animation時間 msec
+        rotate.setDuration(2000);
+        // animationが終わったそのまま表示にする
+        rotate.setFillAfter(true);
+
+        //アニメーションの開始
+        lunchkun.startAnimation(rotate);
+
+
+
     }
 
 
