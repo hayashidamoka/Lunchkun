@@ -30,7 +30,6 @@
         android:src="@drawable/lunch_angry"
         />
 
-
     <Button
         android:id="@+id/sorry_botton"
         android:layout_width="match_parent"

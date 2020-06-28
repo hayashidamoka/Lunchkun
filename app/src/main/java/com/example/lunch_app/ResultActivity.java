@@ -10,25 +10,20 @@ import android.text.method.MovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lunch_app.model.Gourmet;
 import com.example.lunch_app.model.Shop;
-import com.example.lunch_app.model.Urls;
-import com.google.android.gms.location.LocationServices;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -39,10 +34,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.example.lunch_app.MainActivity.lat;
-import static com.example.lunch_app.MainActivity.lng;
-
 public class ResultActivity extends AppCompatActivity {
 
     public static final String API_URL = "http://webservice.recruit.co.jp";
@@ -71,11 +62,7 @@ public class ResultActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -108,9 +95,9 @@ public class ResultActivity extends AppCompatActivity {
                 .build();
 
         Hotpepperapi service = retrofit.create(Hotpepperapi.class);
-        SharedPreferences pref = getSharedPreferences("緯度経度", MODE_PRIVATE);
-        lat = pref.getString("lat", "");
-        lng = pref.getString("lng", "");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String lat = pref.getString("lat", "");
+        String lng = pref.getString("lng", "");
         Call<Gourmet> call = service.webservice("ae27b52bed304677", lat, lng, "3", "1", "100", "json");
         call.enqueue(new Callback<Gourmet>() {
             @Override
@@ -160,6 +147,12 @@ public class ResultActivity extends AppCompatActivity {
 //                startActivity(intent);
             }
         });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
 
