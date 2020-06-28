@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getLocation() {
+    private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = prefer.edit();
                         editor.putString("lat", String.valueOf(location.getLatitude()));
                         editor.putString("lng", String.valueOf(location.getLongitude()));
-                        editor.commit();
+                        editor.apply();
                     } else {
                         //ごめんね画面
                     }
