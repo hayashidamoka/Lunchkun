@@ -1,15 +1,20 @@
 package jp.co.pannacotta.lunch_app;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
+
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.location.Location;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,15 +23,19 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
     public static final String API_URL = "http://webservice.recruit.co.jp";
     private FusedLocationProviderClient mFusedLocationClient;
     private boolean isSuccessLocation = false;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         RelativeLayout rl = findViewById(R.id.mainActivity);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        audioPlay();
 
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +132,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(isSuccessLocation) {
+                if (isSuccessLocation) {
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, ResultActivity.class);
                     startActivity(intent);
-                }else{
+                } else {
                     //ごめんね画面
                 }
             }
@@ -137,5 +147,50 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         lunchkun.startAnimation(rotate);
+    }
+
+    private void audioPlay() {
+        mediaPlayer = new MediaPlayer();
+
+        String filePath = "lunch.wav";
+
+        // assetsから mp3 ファイルを読み込み
+        try (AssetFileDescriptor afdescripter = getAssets().openFd(filePath);) {
+            // MediaPlayerに読み込んだ音楽ファイルを指定
+            mediaPlayer.setDataSource(afdescripter.getFileDescriptor(),
+                    afdescripter.getStartOffset(),
+                    afdescripter.getLength());
+            // 音量調整を端末のボタンに任せる
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            mediaPlayer.prepare();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        };
+
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        // リソースの解放
+        mediaPlayer.release();
+        // 再生する
+        mediaPlayer.start();
+
+        // 終了を検知するリスナー
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                audioStop();
+            }
+        });
+    }
+
+    private void audioStop() {
+        // 再生終了
+        mediaPlayer.stop();
+        // リセット
+        mediaPlayer.reset();
+        // リソースの解放
+        mediaPlayer.release();
+
+        mediaPlayer = null;
     }
 }

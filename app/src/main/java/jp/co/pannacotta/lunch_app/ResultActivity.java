@@ -22,8 +22,8 @@ import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.lunch_app.model.Gourmet;
-import com.example.lunch_app.model.Shop;
+import jp.co.pannacotta.lunch_app.model.Gourmet;
+import jp.co.pannacotta.lunch_app.model.Shop;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

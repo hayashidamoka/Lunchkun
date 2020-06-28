@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.lunch_app.model.Gourmet;
+import jp.co.pannacotta.lunch_app.model.Gourmet;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
