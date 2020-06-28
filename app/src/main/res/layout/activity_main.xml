@@ -1,18 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:background="@color/colorPrimaryDark"
+    android:id="@+id/mainActivity">
 
-        <ImageButton
-            android:background="@color/background"
-            android:id="@+id/kensakuButton"
+        <ImageView
+            android:id="@+id/title"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/lunchkun"/>
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/logo"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/lunchkun_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lunchkun_top"
+            android:layout_centerInParent="true"
+            android:layout_below="@+id/title"
+            android:layout_above="@+id/touch"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            />
+
+        <TextView
+            android:id="@+id/touch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TOUCH START!!"
+            android:textColor="#FFFFFF"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="50dp"/>
+
+
+</RelativeLayout>

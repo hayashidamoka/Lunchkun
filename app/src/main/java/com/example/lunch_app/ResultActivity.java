@@ -1,23 +1,34 @@
 package com.example.lunch_app;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lunch_app.model.Gourmet;
 import com.example.lunch_app.model.Shop;
+import com.example.lunch_app.model.Urls;
+import com.google.android.gms.location.LocationServices;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -42,7 +53,7 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         TextView CregitTextView = findViewById(R.id.CregitTextView);
-        String htmlcredit = "Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>";
+        String htmlcredit = "【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>";
 
         CharSequence cregitChar = Html.fromHtml(htmlcredit);
 
@@ -50,6 +61,8 @@ public class ResultActivity extends AppCompatActivity {
 
         MovementMethod mMethod = LinkMovementMethod.getInstance();
         CregitTextView.setMovementMethod(mMethod);
+
+
     }
 
     @Override
@@ -98,7 +111,7 @@ public class ResultActivity extends AppCompatActivity {
                 int shop_count = response.body().results.shop.size();
                 Random random = new Random();
                 int todayShopnum = random.nextInt(shop_count - 1);
-                Shop todayShop = response.body().results.shop.get(todayShopnum);
+                final Shop todayShop = response.body().results.shop.get(todayShopnum);
 
                 String todayShopName = todayShop.name;
                 ImageView shop_photo = findViewById(R.id.shop_photo);
@@ -106,7 +119,6 @@ public class ResultActivity extends AppCompatActivity {
                 Glide.with(ResultActivity.this).load(todayShopPhotoUrl).apply(new RequestOptions().override(700, 1000)).into(shop_photo);
 
                 String todayShopCatchCopy = todayShop.catchCopy;
-                String todayUrl = todayShop.urls.pc;
 
                 TextView shop_name = findViewById(R.id.shop_name);
 
@@ -117,10 +129,20 @@ public class ResultActivity extends AppCompatActivity {
 
                 shop_catch_copy.setText(todayShopCatchCopy);
 
+                Button button = findViewById(R.id.shop_web_botton);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String todayShopUrl = todayShop.urls.pc;
+                        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                        CustomTabsIntent customTabsIntent = builder.build();
+                        customTabsIntent.launchUrl(ResultActivity.this, Uri.parse(todayShopUrl));
+                    }
+                });
 
 
                 Log.d("ろぐ", todayShop.toString());
-        }
+            }
 
             @Override
             public void onFailure(Call<Gourmet> call, Throwable t) {

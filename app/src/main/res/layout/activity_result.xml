@@ -19,19 +19,12 @@
         />
 
     <ImageView
-        android:id="@+id/shop_photo_bottom"
-        android:layout_width="wrap_content"
+        android:id="@+id/shop_photo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="@+id/shop_web_botton"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/shop_name"
         android:layout_above="@+id/shop_catch_copy"
-        />
-
-    <ImageView
-        android:id="@+id/shop_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="@+id/shop_photo_bottom"
         />
 
     <TextView
@@ -52,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:background="@drawable/frame_style"
-        android:text="お店の詳細"
+        android:text="お店の情報"
         android:textColor="#FFFFFF"
         android:layout_above="@+id/next_shop_botton"
         android:layout_marginBottom="10dp"

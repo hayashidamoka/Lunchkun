@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.example.lunch_app.model.Results;
 import com.example.lunch_app.model.Shop;
@@ -59,11 +60,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton button = findViewById(R.id.kensakuButton);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        checkLocationPermission();
+        RelativeLayout rl = findViewById(R.id.mainActivity);
 
-        button.setOnClickListener(new View.OnClickListener() {
+
+        rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
