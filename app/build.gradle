@@ -4,7 +4,7 @@ android {
     compileSdkVersion 30
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.example.lunch_app"
+        applicationId "jp.co.pannacotta.lunch_app"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
