@@ -68,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout rl = findViewById(R.id.mainActivity);
         checkLocationPermission();
 
-
-
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,22 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView lunchkun = findViewById(R.id.lunchkun_top);
 
-        // RotateAnimation(float fromDegrees, float toDegrees, int pivotXType, float pivotXValue, int pivotYType,float pivotYValue)
         RotateAnimation rotate = new RotateAnimation(0.0f, 360.0f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
-
-        // animation時間 msec
         rotate.setDuration(2000);
-        // animationが終わったそのまま表示にする
         rotate.setFillAfter(true);
-
-        //アニメーションの開始
         lunchkun.startAnimation(rotate);
-
-
-
     }
-
-
 }

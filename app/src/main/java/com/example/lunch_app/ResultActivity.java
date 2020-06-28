@@ -62,7 +62,15 @@ public class ResultActivity extends AppCompatActivity {
         MovementMethod mMethod = LinkMovementMethod.getInstance();
         CregitTextView.setMovementMethod(mMethod);
 
-
+        Button button = findViewById(R.id.next_shop_botton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(ResultActivity.this, AngryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
