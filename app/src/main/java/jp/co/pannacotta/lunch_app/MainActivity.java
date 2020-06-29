@@ -1,14 +1,15 @@
 package jp.co.pannacotta.lunch_app;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.preference.PreferenceManager;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -16,17 +17,25 @@ import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 
@@ -50,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 checkLocationPermission();
-
             }
 
         });
@@ -79,6 +87,46 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+        private void requestLocationSetting() {
+            final LocationSettingsRequest request = new LocationSettingsRequest.Builder()
+                    .setAlwaysShow(true)
+                    .addLocationRequest(LocationRequest.create().setPriority(mPriority))
+                    .build();
+
+            final Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this)
+                    .checkLocationSettings(request);
+
+            result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+                @Override
+                public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+                    try {
+                        task.getResult(ApiException.class);
+                        // 既に設定済み
+                        finishForResult(Locset.ResultCode.SUCCESS);
+                    } catch (ApiException exception) {
+                        switch (exception.getStatusCode()) {
+                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                try {
+                                    // ユーザに位置情報設定を変更してもらうためのダイアログを表示する
+                                    resolvable.startResolutionForResult(MainActivity.this, REQUEST_CODE_LOCATION_SETTING);
+                                    return;
+                                } catch (IntentSender.SendIntentException e) {
+                                    // Ignore the error.
+                                } catch (ClassCastException e) {
+                                    // Ignore, should be an impossible error.
+                                }
+                                break;
+                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                // 位置情報が取得できず、その状態からの復帰も難しい時呼ばれる
+                                break;
+                        }
+                        finishForResult(Locset.ResultCode.LOCATION_SETTING_FAILURE);
+                    }
+                }
+            });
+        }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
@@ -106,12 +154,15 @@ public class MainActivity extends AppCompatActivity {
                         editor.apply();
                         isSuccessLocation = true;
                     } else {
+                        checkLocationPermission()
                         //ごめんね画面
+                        //goErrorActivity();
                     }
                 }
             });
         } else {
             //ごめんね画面
+            goErrorActivity();
         }
     }
 
@@ -149,12 +200,13 @@ public class MainActivity extends AppCompatActivity {
         lunchkun.startAnimation(rotate);
     }
 
-    private void audioPlay() {
+    private boolean audioSetup() {
+        boolean fileCheck = false;
+
         mediaPlayer = new MediaPlayer();
 
         String filePath = "lunch.wav";
 
-        // assetsから mp3 ファイルを読み込み
         try (AssetFileDescriptor afdescripter = getAssets().openFd(filePath);) {
             // MediaPlayerに読み込んだ音楽ファイルを指定
             mediaPlayer.setDataSource(afdescripter.getFileDescriptor(),
@@ -163,17 +215,30 @@ public class MainActivity extends AppCompatActivity {
             // 音量調整を端末のボタンに任せる
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
             mediaPlayer.prepare();
+            mediaPlayer.setLooping(true);
+            fileCheck = true;
         } catch (IOException e1) {
             e1.printStackTrace();
-        };
+        }
+        return fileCheck;
+    }
 
-        mediaPlayer.stop();
-        mediaPlayer.reset();
-        // リソースの解放
-        mediaPlayer.release();
+    private void audioPlay() {
+
+        if (mediaPlayer == null) {
+            // audio ファイルを読出し
+            if (audioSetup()) {
+
+            } else {
+                return;
+            }
+        } else {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        }
         // 再生する
         mediaPlayer.start();
-
         // 終了を検知するリスナー
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -193,4 +258,10 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer = null;
     }
+    private void goErrorActivity() {
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, ErrorActivity.class);
+        startActivity(intent);
+    }
+
 }

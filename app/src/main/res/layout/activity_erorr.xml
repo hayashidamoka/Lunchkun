@@ -26,13 +26,24 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/shop_name"
-        android:layout_above="@+id/sorry_botton"
+        android:layout_above="@+id/please_text"
         android:src="@drawable/lunch_sad"
+        />
+
+    <TextView
+        android:id="@+id/please_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:text="電波のいいところで使ってね..."
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/again_botton"
+        android:layout_marginBottom="20dp"
         />
 
 
     <Button
-        android:id="@+id/sorry_botton"
+        android:id="@+id/again_botton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"

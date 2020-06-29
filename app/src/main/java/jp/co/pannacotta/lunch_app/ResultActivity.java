@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
 import jp.co.pannacotta.lunch_app.model.Gourmet;
 import jp.co.pannacotta.lunch_app.model.Shop;
 
@@ -34,6 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 public class ResultActivity extends AppCompatActivity {
 
     public static final String API_URL = "http://webservice.recruit.co.jp";
@@ -104,55 +106,54 @@ public class ResultActivity extends AppCompatActivity {
             public void onResponse(Call<Gourmet> call, Response<Gourmet> response) {
                 Log.d("ろぐ", response.toString());
                 int shop_count = response.body().results.shop.size();
-                Random random = new Random();
-                int todayShopnum = random.nextInt(shop_count - 1);
-                final Shop todayShop = response.body().results.shop.get(todayShopnum);
+                if (shop_count > 0) {
+                    Random random = new Random();
+                    int todayShopnum = random.nextInt(shop_count - 1);
+                    final Shop todayShop = response.body().results.shop.get(todayShopnum);
 
-                String todayShopName = todayShop.name;
-                ImageView shop_photo = findViewById(R.id.shop_photo);
-                String todayShopPhotoUrl = todayShop.photo.pc.l;
-                Glide.with(ResultActivity.this).load(todayShopPhotoUrl).apply(new RequestOptions().override(700, 1000)).into(shop_photo);
+                    String todayShopName = todayShop.name;
+                    ImageView shop_photo = findViewById(R.id.shop_photo);
+                    String todayShopPhotoUrl = todayShop.photo.pc.l;
+                    Glide.with(ResultActivity.this).load(todayShopPhotoUrl).apply(new RequestOptions().override(700, 1000)).into(shop_photo);
 
-                String todayShopCatchCopy = todayShop.catchCopy;
+                    String todayShopCatchCopy = todayShop.catchCopy;
 
-                TextView shop_name = findViewById(R.id.shop_name);
+                    TextView shop_name = findViewById(R.id.shop_name);
 
-                TextView shop_catch_copy = findViewById(R.id.shop_catch_copy);
+                    TextView shop_catch_copy = findViewById(R.id.shop_catch_copy);
 
-                shop_name.setText(todayShopName);
-
-
-                shop_catch_copy.setText(todayShopCatchCopy);
-
-                Button button = findViewById(R.id.shop_web_botton);
-                button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String todayShopUrl = todayShop.urls.pc;
-                        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                        CustomTabsIntent customTabsIntent = builder.build();
-                        customTabsIntent.launchUrl(ResultActivity.this, Uri.parse(todayShopUrl));
-                    }
-                });
+                    shop_name.setText(todayShopName);
 
 
-                Log.d("ろぐ", todayShop.toString());
+                    shop_catch_copy.setText(todayShopCatchCopy);
+
+                    Button button = findViewById(R.id.shop_web_botton);
+                    button.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String todayShopUrl = todayShop.urls.pc;
+                            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                            CustomTabsIntent customTabsIntent = builder.build();
+                            customTabsIntent.launchUrl(ResultActivity.this, Uri.parse(todayShopUrl));
+                        }
+                    });
+                } else {
+                    goErrorActivity();
+                }
             }
 
             @Override
             public void onFailure(Call<Gourmet> call, Throwable t) {
-                Log.d("ろぐ", t.toString());
-//                Intent intent = new Intent();
-//                intent.setClass(MainActivity.this, ErrorActivity.class);
-//                startActivity(intent);
+                goErrorActivity();
             }
         });
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void goErrorActivity() {
+        Intent intent = new Intent();
+        intent.setClass(ResultActivity.this, ErrorActivity.class);
+        startActivity(intent);
     }
 }
 

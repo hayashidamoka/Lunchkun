@@ -36,7 +36,6 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/shop_web_botton"
         android:layout_marginBottom="20dp"
-
         />
 
     <Button

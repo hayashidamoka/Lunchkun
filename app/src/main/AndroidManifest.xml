@@ -30,8 +30,7 @@
             />
         <activity
             android:name=".ErrorActivity"
-            android:label="@string/title_activity_erorr"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:label="見つかりませんでした..."
             />
         <activity android:name=".AngryActivity"
             android:label="わがまま！"/>
