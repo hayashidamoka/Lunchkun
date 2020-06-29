@@ -1,12 +1,14 @@
 package jp.co.pannacotta.lunch_app;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.annotation.SuppressLint;
+import android.location.LocationManager;
+
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -14,10 +16,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.location.Location;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -25,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -41,26 +46,29 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
+    private static final int REQUEST_LOCATION_SETTING = 1;
     public static final String API_URL = "http://webservice.recruit.co.jp";
     private FusedLocationProviderClient mFusedLocationClient;
     private boolean isSuccessLocation = false;
     private MediaPlayer mediaPlayer;
+    private LocationManager locationManager;
+    private boolean isLocationSetting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         RelativeLayout rl = findViewById(R.id.mainActivity);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //BGM
         audioPlay();
+        initLocation();
 
         rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkLocationPermission();
             }
-
         });
     }
 
@@ -69,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //既に許可してあります
             getLocation();
-            startRotation();
             return true;
         } else {
             //許可してません
@@ -87,45 +94,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-        private void requestLocationSetting() {
-            final LocationSettingsRequest request = new LocationSettingsRequest.Builder()
-                    .setAlwaysShow(true)
-                    .addLocationRequest(LocationRequest.create().setPriority(mPriority))
-                    .build();
-
-            final Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this)
-                    .checkLocationSettings(request);
-
-            result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-                @Override
-                public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
-                    try {
-                        task.getResult(ApiException.class);
-                        // 既に設定済み
-                        finishForResult(Locset.ResultCode.SUCCESS);
-                    } catch (ApiException exception) {
-                        switch (exception.getStatusCode()) {
-                            case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                                try {
-                                    // ユーザに位置情報設定を変更してもらうためのダイアログを表示する
-                                    resolvable.startResolutionForResult(MainActivity.this, REQUEST_CODE_LOCATION_SETTING);
-                                    return;
-                                } catch (IntentSender.SendIntentException e) {
-                                    // Ignore the error.
-                                } catch (ClassCastException e) {
-                                    // Ignore, should be an impossible error.
-                                }
-                                break;
-                            case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                                // 位置情報が取得できず、その状態からの復帰も難しい時呼ばれる
-                                break;
-                        }
-                        finishForResult(Locset.ResultCode.LOCATION_SETTING_FAILURE);
-                    }
-                }
-            });
+    @SuppressLint("MissingPermission")
+    private void initLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final boolean gpsEnabled = locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled && !isLocationSetting) {
+            // GPSを設定するように促す
+            enableLocationSettings();
         }
+    }
 
+    private void enableLocationSettings() {
+        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(settingsIntent, REQUEST_LOCATION_SETTING);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -141,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getLocation() {
+        initLocation();
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -154,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                         editor.apply();
                         isSuccessLocation = true;
                     } else {
-                        checkLocationPermission()
+                        checkLocationPermission();
                         //ごめんね画面
                         //goErrorActivity();
                     }
