@@ -1,4 +1,5 @@
 package jp.co.pannacotta.lunch_app;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -58,35 +58,36 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RelativeLayout rl = findViewById(R.id.mainActivity);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        //BGM
-        audioPlay();
-        initLocation();
 
-        rl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkLocationPermission();
-            }
-        });
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        //BGMスタート
+        audioPlay();
+        //アプリの位置情報の権限確認
+        checkLocationPermission();
+
+
     }
 
     private boolean checkLocationPermission() {
+        //アプリの位置情報の権限確認
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //既に許可してあります
-            getLocation();
+            //端末のGPSがONになっているか確認しにいく
+            initLocation();
             return true;
         } else {
             //許可してません
+            //おねがいダイアログ出す
             new AlertDialog.Builder(this)
                     .setTitle("おねがい")
                     .setMessage("お店を探すために位置情報の権限を許可してね")
                     .setPositiveButton("OK！", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            //おねがいダイアログOKした
                             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+                            //onRequestPermissionsResultへ
                         }
                     }).create()
                     .show();
@@ -94,42 +95,68 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private void initLocation() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        final boolean gpsEnabled = locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if (!gpsEnabled && !isLocationSetting) {
-            // GPSを設定するように促す
-            enableLocationSettings();
-        }
-    }
-
-    private void enableLocationSettings() {
-        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivityForResult(settingsIntent, REQUEST_LOCATION_SETTING);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //アプリの位置情報の権限ONになった？
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getLocation();
-                    startRotation();
+                    //アプリの位置情報の権限ONになったよ
+                    //端末のGPSがONになっているか確認しにいく
+                    initLocation();
                 } else {
+                    //アプリの位置情報の権限ONになってないよ
+                    //アプリ終わり
                     finish();
                 }
         }
     }
 
+    @SuppressLint("MissingPermission")
+    private void initLocation() {
+        //端末のGPSがONになっているか確認
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final boolean gpsEnabled = locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled && !isLocationSetting) {
+            //端末のGPSがOFFだよ
+            //enableLocationSettingsへ
+            enableLocationSettings();
+
+        } else {
+            //端末のGPSがONだよ
+            RelativeLayout rl = findViewById(R.id.mainActivity);
+            rl.setOnClickListener(new View.OnClickListener() {
+                //ランチ君をおす
+                @Override
+                public void onClick(View view) {
+                    //位置情報を取得してね
+                    getLocation();
+                    //アニメーション始まり
+                    startRotation();
+                }
+            });
+        }
+    }
+
+    private void enableLocationSettings() {
+        //端末のGPSをONにしてもらうため設定画面にいく
+        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivityForResult(settingsIntent, REQUEST_LOCATION_SETTING);
+    }
+
+
+
     private void getLocation() {
-        initLocation();
+        //アプリの位置情報の権限ONか確認
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            //アプリの位置情報の権限ON
             mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
+                        //位置情報とれた
+                        //緯度と経度を保存
                         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = pref.edit();
                         editor.putString("lat", String.valueOf(location.getLatitude()));
@@ -137,20 +164,20 @@ public class MainActivity extends AppCompatActivity {
                         editor.apply();
                         isSuccessLocation = true;
                     } else {
-                        checkLocationPermission();
+                        //位置情報とれなかった
                         //ごめんね画面
                         //goErrorActivity();
                     }
                 }
             });
         } else {
-            //ごめんね画面
-            goErrorActivity();
+            //アプリの位置情報の権限OFF
+            //アプリの位置情報の権限確認しにいく
+            checkLocationPermission();
         }
     }
 
     private void startRotation() {
-
         ImageView lunchkun = findViewById(R.id.lunchkun_top);
 
         RotateAnimation rotate = new RotateAnimation(0.0f, 360.0f,
@@ -167,11 +194,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (isSuccessLocation) {
+                    //位置情報が取れていたらアニメーションが終わってリザルト画面にいくよ
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, ResultActivity.class);
                     startActivity(intent);
                 } else {
+                    //位置情報が取れてないよ
                     //ごめんね画面
+                    goErrorActivity();
                 }
             }
 
@@ -241,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
 
         mediaPlayer = null;
     }
+
     private void goErrorActivity() {
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, ErrorActivity.class);
