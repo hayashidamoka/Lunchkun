@@ -2,6 +2,9 @@ package jp.co.pannacotta.lunch_app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -37,13 +40,15 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ResultActivity extends AppCompatActivity {
-
+    private MediaPlayer mediaPlayer;
     public static final String API_URL = "http://webservice.recruit.co.jp";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+
+        audioPlay();
 
         TextView CregitTextView = findViewById(R.id.CregitTextView);
         String htmlcredit = "【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>";
@@ -62,6 +67,15 @@ public class ResultActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(ResultActivity.this, AngryActivity.class);
                 startActivity(intent);
+                mediaPlayer.stop();
+            }
+        });
+
+        Button web_button = findViewById(R.id.shop_web_botton);
+        web_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediaPlayer.stop();
             }
         });
 
@@ -152,8 +166,60 @@ public class ResultActivity extends AppCompatActivity {
 
     private void goErrorActivity() {
         Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setClass(ResultActivity.this, ErrorActivity.class);
         startActivity(intent);
+    }
+    private boolean audioSetup() {
+        boolean fileCheck = false;
+
+        mediaPlayer = new MediaPlayer();
+
+        String filePath = "lunch.wav";
+
+        try (AssetFileDescriptor afdescripter = getAssets().openFd(filePath);) {
+            // MediaPlayerに読み込んだ音楽ファイルを指定
+            mediaPlayer.setDataSource(afdescripter.getFileDescriptor(),
+                    afdescripter.getStartOffset(),
+                    afdescripter.getLength());
+            // 音量調整を端末のボタンに任せる
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            mediaPlayer.prepare();
+            mediaPlayer.setLooping(true);
+            fileCheck = true;
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        return fileCheck;
+    }
+
+    private void audioPlay() {
+
+        if (mediaPlayer == null) {
+            if (audioSetup()) {
+
+            } else {
+                return;
+            }
+        } else {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        }
+        // 再生する
+        mediaPlayer.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        mediaPlayer.start();
     }
 }
 

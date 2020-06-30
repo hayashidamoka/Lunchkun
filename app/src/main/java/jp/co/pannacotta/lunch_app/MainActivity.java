@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.location.Location;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -28,19 +27,9 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 
@@ -134,10 +123,8 @@ public class MainActivity extends AppCompatActivity {
             //端末のGPSがOFFだよ
             //enableLocationSettingsへ
             enableLocationSettings();
-
         } else {
             //端末のGPSがONだよ
-
         }
     }
 
@@ -146,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
         startActivityForResult(settingsIntent, REQUEST_LOCATION_SETTING);
     }
-
 
 
     private void getLocation() {
@@ -242,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
     private void audioPlay() {
 
         if (mediaPlayer == null) {
-            // audio ファイルを読出し
             if (audioSetup()) {
 
             } else {
@@ -264,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void audioStop() {
+    public void audioStop() {
         // 再生終了
         mediaPlayer.stop();
         // リセット
@@ -277,8 +262,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void goErrorActivity() {
         Intent intent = new Intent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setClass(MainActivity.this, ErrorActivity.class);
         startActivity(intent);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        audioStop();
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        audioPlay();
+    }
 }
