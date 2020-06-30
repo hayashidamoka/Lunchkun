@@ -64,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
         audioPlay();
         //アプリの位置情報の権限確認
         checkLocationPermission();
+        RelativeLayout rl = findViewById(R.id.mainActivity);
+        rl.setOnClickListener(new View.OnClickListener() {
+            //ランチ君をおす
+            @Override
+            public void onClick(View view) {
+                //位置情報を取得してね
+                getLocation();
+                //アニメーション始まり
+                startRotation();
+            }
+        });
 
 
     }
@@ -106,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
                     initLocation();
                 } else {
                     //アプリの位置情報の権限ONになってないよ
+                    //BGM終わり
+                    audioStop();
                     //アプリ終わり
                     finish();
                 }
@@ -124,17 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             //端末のGPSがONだよ
-            RelativeLayout rl = findViewById(R.id.mainActivity);
-            rl.setOnClickListener(new View.OnClickListener() {
-                //ランチ君をおす
-                @Override
-                public void onClick(View view) {
-                    //位置情報を取得してね
-                    getLocation();
-                    //アニメーション始まり
-                    startRotation();
-                }
-            });
+
         }
     }
 
