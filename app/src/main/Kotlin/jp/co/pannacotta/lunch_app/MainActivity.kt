@@ -25,7 +25,6 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
-import jp.co.pannacotta.lunch_app.MainActivity
 import java.io.IOException
 
 class MainActivity() : AppCompatActivity() {
@@ -34,6 +33,11 @@ class MainActivity() : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
     private var locationManager: LocationManager? = null
     private val isLocationSetting = false
+    private val requestTitle: String = getString(R.string.requestTitle)
+    private val requestMessage: String = getString(R.string.requestMessage)
+    private val ok: String = getString(R.string.ok)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -64,9 +68,9 @@ class MainActivity() : AppCompatActivity() {
             //許可してません
             //おねがいダイアログ出す
             AlertDialog.Builder(this)
-                    .setTitle("おねがい")
-                    .setMessage("お店を探すために位置情報の権限を許可してね")
-                    .setPositiveButton("OK！", object : DialogInterface.OnClickListener {
+                    .setTitle(requestTitle)
+                    .setMessage(requestMessage)
+                    .setPositiveButton(ok, object : DialogInterface.OnClickListener {
                         override fun onClick(dialogInterface: DialogInterface, i: Int) {
                             //おねがいダイアログOKした
                             ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), MY_PERMISSIONS_REQUEST_LOCATION)

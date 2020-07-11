@@ -27,13 +27,16 @@ import java.io.IOException
 import java.util.*
 
 class ResultActivity : AppCompatActivity() {
+    private val htmlcreditText: String = getString(R.string.htmlcredit)
+
     private var mediaPlayer: MediaPlayer? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
         audioPlay()
         val CregitTextView = findViewById<TextView>(R.id.CregitTextView)
-        val htmlcredit = "【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>"
+//        val htmlcredit = "【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>"
+        val htmlcredit = htmlcreditText
         val cregitChar: CharSequence = Html.fromHtml(htmlcredit)
         CregitTextView.text = cregitChar
         val mMethod = LinkMovementMethod.getInstance()

@@ -40,5 +40,9 @@
     <string name ="again_botton">もういっかい！</string>
     <string name ="angry">もう決めたでしょーっ！</string>
     <string name ="sorry_botton">ごめんなさい</string>
+    <string name ="requestTitle">おねがい</string>
+    <string name ="requestMessage">お店を探すために位置情報の権限を許可してね</string>
+    <string name ="ok">OK！</string>
+    <string name ="htmlcredit">【画像提供：ホットペッパー グルメ】&lt;br&gt;Powered by &lt;a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス&lt;a&gt;【画像提供：ホットペッパー グルメ】&lt;br&gt;Powered by &lt;a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス&lt;a&gt;</string>
 
 </resources>
