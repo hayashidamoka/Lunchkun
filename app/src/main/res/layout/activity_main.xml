@@ -34,13 +34,12 @@
             android:id="@+id/touch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TOUCH START!!"
-            android:textColor="#FFFFFF"
+            android:text="@string/touchStart"
+            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:textStyle="bold"
             android:textSize="40dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="50dp"/>
-
 
 </RelativeLayout>

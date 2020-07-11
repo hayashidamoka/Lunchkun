@@ -30,13 +30,15 @@
         <item>個室</item>
         <item>食べ放題</item>
     </string-array>
-    <string name="title_activity_erorr">ErorrActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name ="title_activity_erorr">ErorrActivity</string>
+    <string name ="touchStart">TOUCH START!!</string>
+    <string name ="loading">読み込み中...</string>
+    <string name ="shop_web_botton">お店の情報</string>
+    <string name ="next_shop_botton">他のところがいい！</string>
+    <string name ="sorry">ごめんね...。</string>
+    <string name ="please_text">電波のいいところで使ってね...</string>
+    <string name ="again_botton">もういっかい！</string>
+    <string name ="angry">もう決めたでしょーっ！</string>
+    <string name ="sorry_botton">ごめんなさい</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>
