@@ -46,7 +46,7 @@ class MainActivity() : AppCompatActivity() {
         rl.setOnClickListener(View.OnClickListener
         //ランチ君をおす
         { //位置情報を取得してね
-            location
+            getlocation()
             //アニメーション始まり
             startRotation()
         })
@@ -123,8 +123,7 @@ class MainActivity() : AppCompatActivity() {
 //アプリの位置情報の権限ON
 
     //アプリの位置情報の権限ONか確認
-    private val location: Unit
-        private get() {
+        private fun getlocation() {
             //アプリの位置情報の権限ONか確認
             if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
