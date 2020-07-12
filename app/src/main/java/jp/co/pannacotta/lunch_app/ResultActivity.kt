@@ -77,17 +77,17 @@ class ResultActivity : AppCompatActivity() {
         val lat = pref.getString("lat", "")
         val lng = pref.getString("lng", "")
         val call = service.webservice("ae27b52bed304677", lat, lng, "3", "1", "100", "json")
-        call.enqueue(object : Callback<Gourmet> {
-            override fun onResponse(call: Call<Gourmet>, response: retrofit2.Response<Gourmet>) {
+        call!!.enqueue(object : Callback<Gourmet?> {
+            override fun onResponse(call: Call<Gourmet?>, response: retrofit2.Response<Gourmet?>) {
                 Log.d("ろぐ", response.toString())
-                val shop_count = response.body().results.shop.size
+                val shop_count = response.body()!!.results!!.shop!!.size
                 if (shop_count > 0) {
                     val random = Random()
                     val todayShopnum = random.nextInt(shop_count - 1)
-                    val todayShop = response.body().results.shop[todayShopnum]
+                    val todayShop = response.body()!!.results!!.shop!![todayShopnum]
                     val todayShopName = todayShop.name
                     val shop_photo = findViewById<ImageView>(R.id.shop_photo)
-                    val todayShopPhotoUrl = todayShop.photo.pc.l
+                    val todayShopPhotoUrl = todayShop.photo!!.pc!!.l
                     Glide.with(this@ResultActivity).load(todayShopPhotoUrl).apply(RequestOptions().override(700, 1000)).into(shop_photo)
                     val todayShopCatchCopy = todayShop.catchCopy
                     val shop_name = findViewById<TextView>(R.id.shop_name)
@@ -96,7 +96,7 @@ class ResultActivity : AppCompatActivity() {
                     shop_catch_copy.text = todayShopCatchCopy
                     val button = findViewById<Button>(R.id.shop_web_botton)
                     button.setOnClickListener {
-                        val todayShopUrl = todayShop.urls.pc
+                        val todayShopUrl = todayShop.urls!!.pc
                         val builder = CustomTabsIntent.Builder()
                         val customTabsIntent = builder.build()
                         customTabsIntent.launchUrl(this@ResultActivity, Uri.parse(todayShopUrl))
@@ -106,7 +106,7 @@ class ResultActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Gourmet>, t: Throwable) {
+            override fun onFailure(call: Call<Gourmet?>, t: Throwable) {
                 goErrorActivity()
             }
         })
