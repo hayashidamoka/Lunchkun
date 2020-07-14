@@ -11,7 +11,7 @@
         android:id="@+id/shop_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="もう決めたでしょーっ！"
+        android:text="@string/angry"
         android:textColor="@color/textColor"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -26,18 +26,18 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/shop_name"
-        android:layout_above="@+id/sorry_botton"
+        android:layout_above="@+id/sorry_button"
         android:src="@drawable/lunch_angry"
         />
 
     <Button
-        android:id="@+id/sorry_botton"
+        android:id="@+id/sorry_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:background="@drawable/frame_style"
-        android:text="ごめんなさい"
-        android:textColor="#FFFFFF"
+        android:text="@string/sorry_button"
+        android:textColor="@color/white"
         android:layout_marginBottom="40dp"
         android:layout_alignParentBottom="true"
         />

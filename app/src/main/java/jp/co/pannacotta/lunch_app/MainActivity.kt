@@ -33,10 +33,18 @@ class MainActivity() : AppCompatActivity() {
     private var isSuccessLocation = false
     private var mediaPlayer: MediaPlayer? = null
     private var locationManager: LocationManager? = null
-    private val isLocationSetting = false
+    private var isLocationSetting = false
+    private var requestTitle: String? = null
+    private var requestMessage: String? = null
+    private var ok: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        requestTitle = getString(R.string.request_title)
+        requestMessage = getString(R.string.request_message)
+        ok = getString(R.string.ok)
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         //BGMスタート
         audioPlay()
@@ -64,9 +72,9 @@ class MainActivity() : AppCompatActivity() {
             //許可してません
             //おねがいダイアログ出す
             AlertDialog.Builder(this)
-                    .setTitle("おねがい")
-                    .setMessage("お店を探すために位置情報の権限を許可してね")
-                    .setPositiveButton("OK！", object : DialogInterface.OnClickListener {
+                    .setTitle(requestTitle)
+                    .setMessage(requestMessage)
+                    .setPositiveButton(ok, object : DialogInterface.OnClickListener {
                         override fun onClick(dialogInterface: DialogInterface, i: Int) {
                             //おねがいダイアログOKした
                             ActivityCompat.requestPermissions(this@MainActivity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), MY_PERMISSIONS_REQUEST_LOCATION)
@@ -253,6 +261,5 @@ class MainActivity() : AppCompatActivity() {
     companion object {
         val MY_PERMISSIONS_REQUEST_LOCATION = 0
         private val REQUEST_LOCATION_SETTING = 1
-        val API_URL = "http://webservice.recruit.co.jp"
     }
 }
