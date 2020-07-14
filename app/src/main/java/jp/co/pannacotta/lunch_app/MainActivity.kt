@@ -18,14 +18,13 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.OnSuccessListener
-import jp.co.pannacotta.lunch_app.MainActivity
 import java.io.IOException
 
 class MainActivity() : AppCompatActivity() {
@@ -50,7 +49,7 @@ class MainActivity() : AppCompatActivity() {
         audioPlay()
         //アプリの位置情報の権限確認
         checkLocationPermission()
-        val rl = findViewById<RelativeLayout>(R.id.mainActivity)
+        val rl = findViewById<ConstraintLayout>(R.id.mainActivity)
         rl.setOnClickListener(View.OnClickListener
         //ランチ君をおす
         { //位置情報を取得してね

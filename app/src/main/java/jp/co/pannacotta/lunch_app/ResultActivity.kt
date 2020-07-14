@@ -16,7 +16,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import jp.co.pannacotta.lunch_app.ResultActivity
 import jp.co.pannacotta.lunch_app.model.Gourmet
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -101,7 +100,7 @@ class ResultActivity : AppCompatActivity() {
                     val todayShopName = todayShop.name
                     val shop_photo = findViewById<ImageView>(R.id.shop_photo)
                     val todayShopPhotoUrl = todayShop.photo!!.pc!!.l
-                    Glide.with(this@ResultActivity).load(todayShopPhotoUrl).apply(RequestOptions().override(700, 1000)).into(shop_photo)
+                    Glide.with(this@ResultActivity).load(todayShopPhotoUrl).apply(RequestOptions().override(1000, 1000)).into(shop_photo)
                     val todayShopCatchCopy = todayShop.catchCopy
                     val shop_name = findViewById<TextView>(R.id.shop_name)
                     val shop_catch_copy = findViewById<TextView>(R.id.shop_catch_copy)
