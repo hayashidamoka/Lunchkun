@@ -71,6 +71,7 @@ class MainActivity() : AppCompatActivity() {
             //許可してません
             //おねがいダイアログ出す
             AlertDialog.Builder(this)
+                    .setCancelable(false)
                     .setTitle(requestTitle)
                     .setMessage(requestMessage)
                     .setPositiveButton(ok, object : DialogInterface.OnClickListener {
@@ -120,14 +121,7 @@ class MainActivity() : AppCompatActivity() {
         //端末のGPSをONにしてもらうため設定画面にいく
         val settingsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivityForResult(settingsIntent, REQUEST_LOCATION_SETTING)
-    }//アプリの位置情報の権限OFF
-    //アプリの位置情報の権限確認しにいく
-//位置情報とれなかった
-    //ごめんね画面
-    //goErrorActivity();
-//位置情報とれた
-    //緯度と経度を保存
-//アプリの位置情報の権限ON
+    }
 
     //アプリの位置情報の権限ONか確認
         private fun getlocation() {
