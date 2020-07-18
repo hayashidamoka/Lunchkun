@@ -1,48 +1,23 @@
 <resources>
     <string name="app_name">ランチ決めてくれる君</string>
-    <string-array name="genre">
-        <item>和食</item>
-        <item>洋食</item>
-        <item>イタリアン・フレンチ</item>
-        <item>中華</item>
-        <item>韓国料理</item>
-        <item>アジア・エスニック料理</item>
-        <item>ラーメン</item>
-        <item>お好み焼き・もんじゃ</item>
-        <item>焼肉・ホルモン</item>
-        <item>カフェ・スイーツ</item>
-        <item>おまかせ！</item>
-    </string-array>
-    <string-array name="people">
-        <item>１人</item>
-        <item>２人</item>
-        <item>３人</item>
-        <item>４人</item>
-        <item>５人</item>
-        <item>〜１０人</item>
-        <item>〜１５人</item>
-        <item>〜２０人</item>
-        <item>２１人〜</item>
-        <item>おまかせ！</item>
-    </string-array>
-    <string-array name="picky">
-        <item>特になし</item>
-        <item>個室</item>
-        <item>食べ放題</item>
-    </string-array>
-    <string name ="title_activity_erorr">ErorrActivity</string>
-    <string name ="touchStart">TOUCH START!!</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name ="touch_start">TOUCH START!!</string>
     <string name ="loading">読み込み中...</string>
-    <string name ="shop_web_botton">お店の情報</string>
-    <string name ="next_shop_botton">他のところがいい！</string>
+    <string name ="shop_web_button">お店の情報</string>
+    <string name ="next_shop_button">他のところがいい！</string>
     <string name ="sorry">ごめんね...。</string>
     <string name ="please_text">電波のいいところで使ってね...</string>
-    <string name ="again_botton">もういっかい！</string>
+    <string name ="again_button">もういっかい！</string>
     <string name ="angry">もう決めたでしょーっ！</string>
-    <string name ="sorry_botton">ごめんなさい</string>
-    <string name ="requestTitle">おねがい</string>
-    <string name ="requestMessage">お店を探すために位置情報の権限を許可してね</string>
+    <string name ="sorry_button">ごめんなさい</string>
+    <string name ="request_title">おねがい</string>
+    <string name ="request_message">お店を探すために位置情報の権限を許可してね</string>
     <string name ="ok">OK！</string>
-    <string name ="htmlcredit">【画像提供：ホットペッパー グルメ】&lt;br&gt;Powered by &lt;a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス&lt;a&gt;【画像提供：ホットペッパー グルメ】&lt;br&gt;Powered by &lt;a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス&lt;a&gt;</string>
-
+    <string name ="html_credit">【画像提供：ホットペッパー グルメ】&lt;br&gt;Powered by &lt;a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス</string>
+    <string name ="webservice_key">ae27b52bed304677</string>
+    <string name ="webservice_range">3</string>
+    <string name ="webservice_lunch">1</string>
+    <string name ="webservice_count">100</string>
+    <string name ="webservice_format">json</string>
 </resources>

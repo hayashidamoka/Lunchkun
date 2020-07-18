@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/lunch_background"
+    android:orientation="vertical"
     android:padding="20dp">
 
     <TextView
@@ -13,63 +14,64 @@
         android:layout_height="wrap_content"
         android:text="@string/loading"
         android:textColor="@color/textColor"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/shop_photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/shop_name"
-        android:layout_above="@+id/shop_catch_copy"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/shop_catch_copy"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shop_name" />
 
     <TextView
         android:id="@+id/shop_catch_copy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:text="@string/loading"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/shop_web_botton"
         android:layout_marginBottom="20dp"
-        />
+        android:text="@string/loading"
+        app:layout_constraintBottom_toTopOf="@+id/shop_web_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/shop_web_botton"
+        android:id="@+id/shop_web_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:background="@drawable/frame_style"
-        android:text="@string/shop_web_botton"
-        android:textColor="@color/white"
-        android:layout_above="@+id/next_shop_botton"
         android:layout_marginBottom="10dp"
-        />
+        android:background="@drawable/frame_style"
+        android:text="@string/shop_web_button"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/next_shop_button"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/next_shop_botton"
+        android:id="@+id/next_shop_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:background="@drawable/frame_style"
-        android:text="@string/next_shop_botton"
-        android:textColor="@color/white"
-        android:layout_above="@+id/CregitTextView"
         android:layout_marginBottom="10dp"
-        />
+        android:background="@drawable/frame_style"
+        android:text="@string/next_shop_button"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/CregitTextView"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/CregitTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:textColor="@color/textColor"
         android:contentDescription="@null"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
-</RelativeLayout>
+        android:textColor="@color/textColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/lunch_background"
+    android:orientation="vertical"
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/shop_name"
+        android:id="@+id/angry_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:text="@string/angry"
         android:textColor="@color/textColor"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textSize="20dp"
-        android:layout_marginTop="40dp"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/lunch_angry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/shop_name"
-        android:layout_above="@+id/sorry_botton"
         android:src="@drawable/lunch_angry"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/sorry_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/angry_text" />
 
     <Button
-        android:id="@+id/sorry_botton"
+        android:id="@+id/sorry_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:background="@drawable/frame_style"
-        android:text="@string/sorry_botton"
-        android:textColor="@color/white"
         android:layout_marginBottom="40dp"
-        android:layout_alignParentBottom="true"
-        />
+        android:background="@drawable/frame_style"
+        android:text="@string/sorry_button"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
