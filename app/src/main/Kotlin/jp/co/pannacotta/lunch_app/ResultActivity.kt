@@ -27,28 +27,38 @@ import java.io.IOException
 import java.util.*
 
 class ResultActivity : AppCompatActivity() {
-    private val htmlcreditText: String = getString(R.string.htmlcredit)
-
     private var mediaPlayer: MediaPlayer? = null
+    private var htmlcreditText: String? = null
+    private var webservice_key: String? = null
+    private var webservice_range: String? = null
+    private var webservice_lunch: String? = null
+    private var webservice_count: String? = null
+    private var webservice_format: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
+        htmlcreditText = getString(R.string.html_credit)
+        webservice_key = getString(R.string.webservice_key)
+        webservice_range = getString(R.string.webservice_range)
+        webservice_lunch = getString(R.string.webservice_lunch)
+        webservice_count = getString(R.string.webservice_count)
+        webservice_format = getString(R.string.webservice_format)
         audioPlay()
         val CregitTextView = findViewById<TextView>(R.id.CregitTextView)
-//        val htmlcredit = "【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>【画像提供：ホットペッパー グルメ】<br>Powered by <a href=\"http://webservice.recruit.co.jp/\">ホットペッパー Webサービス</a>"
         val htmlcredit = htmlcreditText
         val cregitChar: CharSequence = Html.fromHtml(htmlcredit)
         CregitTextView.text = cregitChar
         val mMethod = LinkMovementMethod.getInstance()
         CregitTextView.movementMethod = mMethod
-        val button = findViewById<Button>(R.id.next_shop_botton)
+        val button = findViewById<Button>(R.id.next_shop_button)
         button.setOnClickListener {
             val intent = Intent()
             intent.setClass(this@ResultActivity, AngryActivity::class.java)
             startActivity(intent)
             mediaPlayer!!.stop()
         }
-        val web_button = findViewById<Button>(R.id.shop_web_botton)
+        val web_button = findViewById<Button>(R.id.shop_web_button)
         web_button.setOnClickListener { mediaPlayer!!.stop() }
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor { chain ->
@@ -78,27 +88,27 @@ class ResultActivity : AppCompatActivity() {
         val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val lat = pref.getString("lat", "")
         val lng = pref.getString("lng", "")
-        val call = service.webservice("ae27b52bed304677", lat, lng, "3", "1", "100", "json")
-        call!!.enqueue(object : Callback<Gourmet> {
-            override fun onResponse(call: Call<Gourmet>, response: retrofit2.Response<Gourmet>) {
+        val call = service.webservice(webservice_key, lat, lng, webservice_range, webservice_lunch, webservice_count, webservice_format)
+        call!!.enqueue(object : Callback<Gourmet?> {
+            override fun onResponse(call: Call<Gourmet?>, response: retrofit2.Response<Gourmet?>) {
                 Log.d("ろぐ", response.toString())
-                val shop_count = response.body().results.shop.size
+                val shop_count = response.body()!!.results!!.shop!!.size
                 if (shop_count > 0) {
                     val random = Random()
                     val todayShopnum = random.nextInt(shop_count - 1)
-                    val todayShop = response.body().results.shop[todayShopnum]
+                    val todayShop = response.body()!!.results!!.shop!![todayShopnum]
                     val todayShopName = todayShop.name
                     val shop_photo = findViewById<ImageView>(R.id.shop_photo)
-                    val todayShopPhotoUrl = todayShop.photo.pc.l
-                    Glide.with(this@ResultActivity).load(todayShopPhotoUrl).apply(RequestOptions().override(700, 1000)).into(shop_photo)
+                    val todayShopPhotoUrl = todayShop.photo!!.pc!!.l
+                    Glide.with(this@ResultActivity).load(todayShopPhotoUrl).apply(RequestOptions().override(1000, 1000)).into(shop_photo)
                     val todayShopCatchCopy = todayShop.catchCopy
                     val shop_name = findViewById<TextView>(R.id.shop_name)
                     val shop_catch_copy = findViewById<TextView>(R.id.shop_catch_copy)
                     shop_name.text = todayShopName
                     shop_catch_copy.text = todayShopCatchCopy
-                    val button = findViewById<Button>(R.id.shop_web_botton)
+                    val button = findViewById<Button>(R.id.shop_web_button)
                     button.setOnClickListener {
-                        val todayShopUrl = todayShop.urls.pc
+                        val todayShopUrl = todayShop.urls!!.pc
                         val builder = CustomTabsIntent.Builder()
                         val customTabsIntent = builder.build()
                         customTabsIntent.launchUrl(this@ResultActivity, Uri.parse(todayShopUrl))
@@ -108,7 +118,7 @@ class ResultActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Gourmet>, t: Throwable) {
+            override fun onFailure(call: Call<Gourmet?>, t: Throwable) {
                 goErrorActivity()
             }
         })
@@ -144,7 +154,7 @@ class ResultActivity : AppCompatActivity() {
     }
 
     private fun audioPlay() {
-        if (this.mediaPlayer == null) {
+        if (mediaPlayer == null) {
             if (audioSetup()) {
             } else {
                 return

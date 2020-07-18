@@ -18,9 +18,9 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -32,25 +32,28 @@ class MainActivity() : AppCompatActivity() {
     private var isSuccessLocation = false
     private var mediaPlayer: MediaPlayer? = null
     private var locationManager: LocationManager? = null
-    private val isLocationSetting = false
-    private val requestTitle: String = getString(R.string.requestTitle)
-    private val requestMessage: String = getString(R.string.requestMessage)
-    private val ok: String = getString(R.string.ok)
-
+    private var isLocationSetting = false
+    private var requestTitle: String? = null
+    private var requestMessage: String? = null
+    private var ok: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        requestTitle = getString(R.string.request_title)
+        requestMessage = getString(R.string.request_message)
+        ok = getString(R.string.ok)
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         //BGMスタート
         audioPlay()
         //アプリの位置情報の権限確認
         checkLocationPermission()
-        val rl = findViewById<RelativeLayout>(R.id.mainActivity)
+        val rl = findViewById<ConstraintLayout>(R.id.mainActivity)
         rl.setOnClickListener(View.OnClickListener
         //ランチ君をおす
         { //位置情報を取得してね
-            location
+            getlocation()
             //アニメーション始まり
             startRotation()
         })
@@ -68,6 +71,7 @@ class MainActivity() : AppCompatActivity() {
             //許可してません
             //おねがいダイアログ出す
             AlertDialog.Builder(this)
+                    .setCancelable(false)
                     .setTitle(requestTitle)
                     .setMessage(requestMessage)
                     .setPositiveButton(ok, object : DialogInterface.OnClickListener {
@@ -117,46 +121,38 @@ class MainActivity() : AppCompatActivity() {
         //端末のGPSをONにしてもらうため設定画面にいく
         val settingsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivityForResult(settingsIntent, REQUEST_LOCATION_SETTING)
-    }//アプリの位置情報の権限OFF
-    //アプリの位置情報の権限確認しにいく
-//位置情報とれなかった
-    //ごめんね画面
-    //goErrorActivity();
-//位置情報とれた
-    //緯度と経度を保存
-//アプリの位置情報の権限ON
+    }
 
     //アプリの位置情報の権限ONか確認
-    private val location: Unit
-        private get() {
-            //アプリの位置情報の権限ONか確認
-            if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-                //アプリの位置情報の権限ON
-                mFusedLocationClient!!.lastLocation.addOnSuccessListener(this, object : OnSuccessListener<Location?> {
-                    override fun onSuccess(location: Location?) {
-                        if (location != null) {
-                            //位置情報とれた
-                            //緯度と経度を保存
-                            val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                            val editor = pref.edit()
-                            editor.putString("lat", location.latitude.toString())
-                            editor.putString("lng", location.longitude.toString())
-                            editor.apply()
-                            isSuccessLocation = true
-                        } else {
-                            //位置情報とれなかった
-                            //ごめんね画面
-                            //goErrorActivity();
-                        }
+    private fun getlocation() {
+        //アプリの位置情報の権限ONか確認
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            //アプリの位置情報の権限ON
+            mFusedLocationClient!!.lastLocation.addOnSuccessListener(this, object : OnSuccessListener<Location?> {
+                override fun onSuccess(location: Location?) {
+                    if (location != null) {
+                        //位置情報とれた
+                        //緯度と経度を保存
+                        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                        val editor = pref.edit()
+                        editor.putString("lat", location.latitude.toString())
+                        editor.putString("lng", location.longitude.toString())
+                        editor.apply()
+                        isSuccessLocation = true
+                    } else {
+                        //位置情報とれなかった
+                        //ごめんね画面
+                        //goErrorActivity();
                     }
-                })
-            } else {
-                //アプリの位置情報の権限OFF
-                //アプリの位置情報の権限確認しにいく
-                checkLocationPermission()
-            }
+                }
+            })
+        } else {
+            //アプリの位置情報の権限OFF
+            //アプリの位置情報の権限確認しにいく
+            checkLocationPermission()
         }
+    }
 
     private fun startRotation() {
         val lunchkun = findViewById<ImageView>(R.id.lunchkun_top)
@@ -173,6 +169,7 @@ class MainActivity() : AppCompatActivity() {
                     val intent = Intent()
                     intent.setClass(this@MainActivity, ResultActivity::class.java)
                     startActivity(intent)
+                    audioStop()
                 } else {
                     //位置情報が取れてないよ
                     //ごめんね画面
@@ -230,11 +227,11 @@ class MainActivity() : AppCompatActivity() {
 
     fun audioStop() {
         // 再生終了
-        mediaPlayer!!.stop()
+        mediaPlayer?.stop()
         // リセット
-        mediaPlayer!!.reset()
+        mediaPlayer?.reset()
         // リソースの解放
-        mediaPlayer!!.release()
+        mediaPlayer?.release()
         mediaPlayer = null
     }
 
@@ -245,8 +242,8 @@ class MainActivity() : AppCompatActivity() {
         startActivity(intent)
     }
 
-    public override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         audioStop()
     }
 
@@ -258,6 +255,5 @@ class MainActivity() : AppCompatActivity() {
     companion object {
         val MY_PERMISSIONS_REQUEST_LOCATION = 0
         private val REQUEST_LOCATION_SETTING = 1
-        val API_URL = "http://webservice.recruit.co.jp"
     }
 }

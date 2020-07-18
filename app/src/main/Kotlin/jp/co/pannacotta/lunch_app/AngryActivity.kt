@@ -15,7 +15,7 @@ class AngryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_angry)
         audioPlay()
-        val button = findViewById<Button>(R.id.sorry_botton)
+        val button = findViewById<Button>(R.id.sorry_button)
         button.setOnClickListener {
             val intent = Intent()
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
