@@ -169,6 +169,7 @@ class MainActivity() : AppCompatActivity() {
                     val intent = Intent()
                     intent.setClass(this@MainActivity, ResultActivity::class.java)
                     startActivity(intent)
+                    audioStop()
                 } else {
                     //位置情報が取れてないよ
                     //ごめんね画面
@@ -226,11 +227,11 @@ class MainActivity() : AppCompatActivity() {
 
     fun audioStop() {
         // 再生終了
-        mediaPlayer!!.stop()
+        mediaPlayer?.stop()
         // リセット
-        mediaPlayer!!.reset()
+        mediaPlayer?.reset()
         // リソースの解放
-        mediaPlayer!!.release()
+        mediaPlayer?.release()
         mediaPlayer = null
     }
 
@@ -241,8 +242,8 @@ class MainActivity() : AppCompatActivity() {
         startActivity(intent)
     }
 
-    public override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         audioStop()
     }
 
