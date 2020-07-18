@@ -6,11 +6,11 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import jp.co.pannacotta.lunch_app.MainActivity
 import java.io.IOException
 
 class AngryActivity : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_angry)

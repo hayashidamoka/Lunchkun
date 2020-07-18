@@ -124,35 +124,35 @@ class MainActivity() : AppCompatActivity() {
     }
 
     //アプリの位置情報の権限ONか確認
-        private fun getlocation() {
-            //アプリの位置情報の権限ONか確認
-            if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-                //アプリの位置情報の権限ON
-                mFusedLocationClient!!.lastLocation.addOnSuccessListener(this, object : OnSuccessListener<Location?> {
-                    override fun onSuccess(location: Location?) {
-                        if (location != null) {
-                            //位置情報とれた
-                            //緯度と経度を保存
-                            val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                            val editor = pref.edit()
-                            editor.putString("lat", location.latitude.toString())
-                            editor.putString("lng", location.longitude.toString())
-                            editor.apply()
-                            isSuccessLocation = true
-                        } else {
-                            //位置情報とれなかった
-                            //ごめんね画面
-                            //goErrorActivity();
-                        }
+    private fun getlocation() {
+        //アプリの位置情報の権限ONか確認
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            //アプリの位置情報の権限ON
+            mFusedLocationClient!!.lastLocation.addOnSuccessListener(this, object : OnSuccessListener<Location?> {
+                override fun onSuccess(location: Location?) {
+                    if (location != null) {
+                        //位置情報とれた
+                        //緯度と経度を保存
+                        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                        val editor = pref.edit()
+                        editor.putString("lat", location.latitude.toString())
+                        editor.putString("lng", location.longitude.toString())
+                        editor.apply()
+                        isSuccessLocation = true
+                    } else {
+                        //位置情報とれなかった
+                        //ごめんね画面
+                        //goErrorActivity();
                     }
-                })
-            } else {
-                //アプリの位置情報の権限OFF
-                //アプリの位置情報の権限確認しにいく
-                checkLocationPermission()
-            }
+                }
+            })
+        } else {
+            //アプリの位置情報の権限OFF
+            //アプリの位置情報の権限確認しにいく
+            checkLocationPermission()
         }
+    }
 
     private fun startRotation() {
         val lunchkun = findViewById<ImageView>(R.id.lunchkun_top)

@@ -20,8 +20,7 @@ class Shop {
 
     @JvmField
     @SerializedName("catch")
-    var catchCopy: String? = null
-    //public Genre genre;
+    var catchCopy: String? = null //public Genre genre;
     //public String access;
     //public String free_food;
     // public String private_room;
