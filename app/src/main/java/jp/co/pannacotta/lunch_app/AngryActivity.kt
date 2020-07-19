@@ -22,6 +22,7 @@ class AngryActivity : AppCompatActivity() {
             intent.setClass(this@AngryActivity, MainActivity::class.java)
             startActivity(intent)
             mediaPlayer!!.stop()
+            mediaPlayer = null
         }
     }
 
@@ -62,13 +63,23 @@ class AngryActivity : AppCompatActivity() {
         mediaPlayer!!.start()
     }
 
+    fun audioStop() {
+        // 再生終了
+        mediaPlayer?.stop()
+        // リセット
+        mediaPlayer?.reset()
+        // リソースの解放
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
     public override fun onPause() {
         super.onPause()
-        mediaPlayer!!.pause()
+        audioStop()
     }
 
     public override fun onRestart() {
         super.onRestart()
-        mediaPlayer!!.start()
+        audioPlay()
     }
 }

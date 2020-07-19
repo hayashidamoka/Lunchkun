@@ -193,9 +193,9 @@ class MainActivity() : AppCompatActivity() {
                         afdescripter.getStartOffset(),
                         afdescripter.getLength())
                 // 音量調整を端末のボタンに任せる
-                setVolumeControlStream(AudioManager.STREAM_MUSIC)
+                volumeControlStream = AudioManager.STREAM_MUSIC
                 mediaPlayer!!.prepare()
-                mediaPlayer!!.setLooping(true)
+                mediaPlayer!!.isLooping = true
                 fileCheck = true
             }
         } catch (e1: IOException) {
