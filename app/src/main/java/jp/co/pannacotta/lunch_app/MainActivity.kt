@@ -8,9 +8,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
+import android.media.SoundPool
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.provider.Settings
@@ -36,6 +38,9 @@ class MainActivity() : AppCompatActivity() {
     private var requestTitle: String? = null
     private var requestMessage: String? = null
     private var ok: String? = null
+    private var soundPool: SoundPool? = null
+    private var voice_title = 0
+    private var voice_kyounolunchha = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +48,20 @@ class MainActivity() : AppCompatActivity() {
         requestTitle = getString(R.string.request_title)
         requestMessage = getString(R.string.request_message)
         ok = getString(R.string.ok)
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val audioAttributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
+        soundPool = SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(2).build()
+        voice_title = soundPool!!.load(this,R.raw.title,1)
+        voice_kyounolunchha = soundPool!!.load(this,R.raw.kyounolunchha,1)
+
+        soundPool!!.setOnLoadCompleteListener { soundPool, sampleId, status ->
+            if (0 == status) {
+                when  (sampleId) {
+                    voice_title -> soundPool!!.play(voice_title, 1.0f, 1.0f, 0, 0, 1.0f)
+                }
+            }
+        }
+
         //BGMスタート
         audioPlay()
         //アプリの位置情報の権限確認
@@ -52,7 +69,8 @@ class MainActivity() : AppCompatActivity() {
         val rl = findViewById<ConstraintLayout>(R.id.mainActivity)
         rl.setOnClickListener(View.OnClickListener
         //ランチ君をおす
-        { //位置情報を取得してね
+        { soundPool!!.play(voice_kyounolunchha,1.0f,1.0f,0,0,1.0f)
+            //位置情報を取得してね
             getlocation()
             //アニメーション始まり
             startRotation()
