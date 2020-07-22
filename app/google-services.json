@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "249257247164",
+    "firebase_url": "https://lunchkun-920c3.firebaseio.com",
+    "project_id": "lunchkun-920c3",
+    "storage_bucket": "lunchkun-920c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249257247164:android:7e6380211d48e3a21a6bb9",
+        "android_client_info": {
+          "package_name": "jp.co.pannacotta.lunch_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "249257247164-cpsokpkoka9cda4vkh90cpvca44h1nhu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmlv94uTqFDCuX82K7ST64c9Kf2BaTvwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249257247164-cpsokpkoka9cda4vkh90cpvca44h1nhu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

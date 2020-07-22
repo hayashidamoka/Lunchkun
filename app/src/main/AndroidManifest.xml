@@ -34,6 +34,13 @@
             />
         <activity android:name=".AngryActivity"
             android:label="わがまま！"/>
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
