@@ -57,7 +57,7 @@ class MainActivity() : AppCompatActivity() {
         soundPool!!.setOnLoadCompleteListener { soundPool, sampleId, status ->
             if (0 == status) {
                 when  (sampleId) {
-                    voice_title -> soundPool!!.play(voice_title, 1.0f, 1.0f, 0, 0, 1.0f)
+                    voice_title -> soundPool!!.play(voice_title, 0.3f, 0.3f, 0, 0, 1.0f)
                 }
             }
         }
@@ -69,7 +69,7 @@ class MainActivity() : AppCompatActivity() {
         val rl = findViewById<ConstraintLayout>(R.id.mainActivity)
         rl.setOnClickListener(View.OnClickListener
         //ランチ君をおす
-        { soundPool!!.play(voice_kyounolunchha,1.0f,1.0f,0,0,1.0f)
+        { soundPool!!.play(voice_kyounolunchha,0.3f,0.3f,0,0,1.0f)
             //位置情報を取得してね
             getlocation()
             //アニメーション始まり
@@ -258,11 +258,14 @@ class MainActivity() : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         intent.setClass(this@MainActivity, ErrorActivity::class.java)
         startActivity(intent)
+        audioStop()
     }
 
     override fun onStop() {
         super.onStop()
         audioStop()
+        soundPool?.stop(1)
+        soundPool?.stop(2)
     }
 
     public override fun onRestart() {

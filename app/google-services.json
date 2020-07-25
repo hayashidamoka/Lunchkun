@@ -5,6 +5,10 @@
     "project_id": "lunchkun-920c3",
     "storage_bucket": "lunchkun-920c3.appspot.com"
   },
+  "notification" : {
+    "icon" : "myicon",
+    "sound" : ""
+  },
   "client": [
     {
       "client_info": {
