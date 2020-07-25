@@ -1,8 +1,10 @@
 package jp.co.pannacotta.lunch_app
 
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.SoundPool
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -10,12 +12,25 @@ import java.io.IOException
 
 class ErrorActivity : AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
+    private var soundPool: SoundPool? = null
+    private var voice_sorry = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_erorr)
         audioPlay()
         val button = findViewById<Button>(R.id.again_button)
+        val audioAttributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
+        soundPool = SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(2).build()
+        voice_sorry = soundPool!!.load(this,R.raw.sorry,1)
+
+        soundPool!!.setOnLoadCompleteListener { soundPool, sampleId, status ->
+            if (0 == status) {
+                when  (sampleId) {
+                    voice_sorry -> soundPool!!.play(voice_sorry, 0.3f, 0.3f, 0, 0, 1.0f)
+                }
+            }
+        }
         button.setOnClickListener {
             val intent = Intent()
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -62,13 +77,24 @@ class ErrorActivity : AppCompatActivity() {
         mediaPlayer!!.start()
     }
 
+    fun audioStop() {
+        // 再生終了
+        mediaPlayer?.stop()
+        // リセット
+        mediaPlayer?.reset()
+        // リソースの解放
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
     public override fun onPause() {
         super.onPause()
-        mediaPlayer!!.pause()
+        audioStop()
+        soundPool?.stop(1)
     }
 
     public override fun onRestart() {
         super.onRestart()
-        mediaPlayer!!.start()
+        audioPlay()
     }
 }

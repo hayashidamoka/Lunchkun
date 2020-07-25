@@ -1,8 +1,10 @@
 package jp.co.pannacotta.lunch_app
 
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -34,6 +36,8 @@ class ResultActivity : AppCompatActivity() {
     private var webservice_lunch: String? = null
     private var webservice_count: String? = null
     private var webservice_format: String? = null
+    private var soundPool: SoundPool? = null
+    private var voice_koko = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +48,17 @@ class ResultActivity : AppCompatActivity() {
         webservice_lunch = getString(R.string.webservice_lunch)
         webservice_count = getString(R.string.webservice_count)
         webservice_format = getString(R.string.webservice_format)
+        val audioAttributes = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build()
+        soundPool = SoundPool.Builder().setAudioAttributes(audioAttributes).setMaxStreams(2).build()
+        voice_koko = soundPool!!.load(this,R.raw.koko,1)
+
+        soundPool!!.setOnLoadCompleteListener { soundPool, sampleId, status ->
+            if (0 == status) {
+                when  (sampleId) {
+                    voice_koko -> soundPool!!.play(voice_koko, 0.3f, 0.3f, 0, 0, 1.0f)
+                }
+            }
+        }
         audioPlay()
         val CregitTextView = findViewById<TextView>(R.id.CregitTextView)
         val htmlcredit = htmlcreditText
@@ -181,6 +196,7 @@ class ResultActivity : AppCompatActivity() {
     public override fun onPause() {
         super.onPause()
         audioStop()
+        soundPool?.stop(1)
     }
 
     public override fun onRestart() {
